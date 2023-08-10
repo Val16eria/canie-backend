@@ -6,7 +6,7 @@
   "author": "Val16eria <KStorer61@icloud.com>",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
+    "start": "ts-node ./src/app.ts",
     "dev": "nodemon",
     "predev": "yarn run swagger",
     "prebuild": "yarn run swagger",
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.2",
     "swagger-ui-express": "^5.0.0",

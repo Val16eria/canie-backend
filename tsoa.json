@@ -1,8 +1,17 @@
 {
-    "entryFile": "src/index.ts",
-    "noImplicitAdditionalProperties": "throw-on-extras",
-    "spec": {
-        "outputDirectory": ".",
-        "specVersion": 3
-    }
+  "swagger": {
+    "info": {
+      "description": "canie-backend",
+      "version": "1.0.0",
+      "title": "canie-backend"
+    },
+    "schemes": [ "http", "https" ]
+  },
+  "entryFile": "src/app.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/**/*.controller.ts"],
+  "spec": {
+    "outputDirectory": "build",
+    "specVersion": 3
+  }
 }

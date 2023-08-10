@@ -1,0 +1,239 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"IAuthSuccessResponse": {
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"access_token": {
+						"type": "string"
+					},
+					"refresh_token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"access_token",
+					"refresh_token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IAuthBadResponse": {
+				"properties": {
+					"status": {
+						"type": "number",
+						"format": "double"
+					},
+					"error_message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"error_message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ISignUp": {
+				"properties": {
+					"first_name": {
+						"type": "string"
+					},
+					"last_name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"pws": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string",
+						"enum": [
+							"photograph",
+							"model"
+						]
+					}
+				},
+				"required": [
+					"first_name",
+					"last_name",
+					"email",
+					"pws",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ISignIn": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"pws": {
+						"type": "string"
+					},
+					"remember_me": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"email",
+					"pws",
+					"remember_me"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "canie-backend",
+		"version": "1.0.0",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"name": "Val16eria ",
+			"email": "KStorer61@icloud.com"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/auth/signup": {
+			"post": {
+				"operationId": "SignUp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/IAuthSuccessResponse"
+										},
+										{
+											"$ref": "#/components/schemas/IAuthBadResponse"
+										}
+									]
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"first_name": "Valeria",
+											"last_name": "Mikhailenko",
+											"email": "test@gmail.com",
+											"pws": "12345678",
+											"role": "photograph"
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IAuthBadResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ISignUp"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/signin": {
+			"post": {
+				"operationId": "SignIn",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/IAuthSuccessResponse"
+										},
+										{
+											"$ref": "#/components/schemas/IAuthBadResponse"
+										}
+									]
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"email": "test@gmail.com",
+											"pws": "12345678",
+											"remember_me": true
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IAuthBadResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ISignIn"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
