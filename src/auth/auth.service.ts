@@ -1,4 +1,10 @@
+import { getUserId } from '../user/user.schema';
+import { IUser } from '../user/user.dto';
 import { ISignIn, ISignUp } from './auth.dto';
+
+export interface IAuthResponse extends IAuthSuccessResponse {
+    user: IUser
+}
 
 export interface IAuthSuccessResponse {
     status: number,
@@ -12,12 +18,17 @@ export interface IAuthBadResponse {
 }
 
 export class AuthService {
-    public SignUp(dto: ISignUp): IAuthSuccessResponse | IAuthBadResponse {
+    public SignUp(dto: ISignUp, response: IAuthSuccessResponse): IAuthResponse | IAuthBadResponse {
         try {
             return {
-                status: 200,
-                access_token: '',
-                refresh_token: ''
+                user: {
+                    id: getUserId(),
+                    first_name: dto.first_name,
+                    last_name: dto.last_name,
+                    email: dto.email,
+                    role: dto.role
+                },
+                ...response
             }
         }
         catch (err) {
@@ -29,20 +40,24 @@ export class AuthService {
         }
     }
 
-    public SignIn(dto: ISignIn): IAuthSuccessResponse | IAuthBadResponse {
-        try {
-            return {
-                status: 200,
-                access_token: '',
-                refresh_token: ''
-            }
-        }
-        catch (err) {
-            console.log('Ошибка авторизации', err);
-            return {
-                status: err,
-                error_message: 'Ошибка авторизации'
-            }
-        }
-    }
+    // public SignIn(dto: IUser, response: IAuthSuccessResponse): IAuthResponse | IAuthBadResponse {
+    //     try {
+    //         return {
+    //             user: {
+    //                 first_name: dto.first_name,
+    //                 last_name: dto.last_name,
+    //                 email: dto.email,
+    //                 role: dto.role
+    //             },
+    //             ...response
+    //         }
+    //     }
+    //     catch (err) {
+    //         console.log('Ошибка авторизации', err);
+    //         return {
+    //             status: err,
+    //             error_message: 'Ошибка авторизации'
+    //         }
+    //     }
+    // }
 }

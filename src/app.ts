@@ -64,5 +64,3 @@ async function startApp() {
 }
 
 startApp();
-
-// "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",

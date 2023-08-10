@@ -6,7 +6,35 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"IAuthSuccessResponse": {
+			"IUser": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"first_name": {
+						"type": "string"
+					},
+					"last_name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"first_name",
+					"last_name",
+					"email",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IAuthResponse": {
 				"properties": {
 					"status": {
 						"type": "number",
@@ -17,12 +45,16 @@
 					},
 					"refresh_token": {
 						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/IUser"
 					}
 				},
 				"required": [
 					"status",
 					"access_token",
-					"refresh_token"
+					"refresh_token",
+					"user"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -59,11 +91,7 @@
 						"type": "string"
 					},
 					"role": {
-						"type": "string",
-						"enum": [
-							"photograph",
-							"model"
-						]
+						"type": "string"
 					}
 				},
 				"required": [
@@ -72,26 +100,6 @@
 					"email",
 					"pws",
 					"role"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ISignIn": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"pws": {
-						"type": "string"
-					},
-					"remember_me": {
-						"type": "boolean"
-					}
-				},
-				"required": [
-					"email",
-					"pws",
-					"remember_me"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -123,7 +131,7 @@
 								"schema": {
 									"anyOf": [
 										{
-											"$ref": "#/components/schemas/IAuthSuccessResponse"
+											"$ref": "#/components/schemas/IAuthResponse"
 										},
 										{
 											"$ref": "#/components/schemas/IAuthBadResponse"
@@ -133,11 +141,16 @@
 								"examples": {
 									"Example 1": {
 										"value": {
-											"first_name": "Valeria",
-											"last_name": "Mikhailenko",
-											"email": "test@gmail.com",
-											"pws": "12345678",
-											"role": "photograph"
+											"user": {
+												"id": "1",
+												"first_name": "Valeria",
+												"last_name": "Mikhailenko",
+												"email": "test@gmail.com",
+												"role": "photograph"
+											},
+											"status": 200,
+											"access_token": "your access_token",
+											"refresh_token": "your refresh_token"
 										}
 									}
 								}
@@ -166,64 +179,6 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/ISignUp"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/signin": {
-			"post": {
-				"operationId": "SignIn",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"anyOf": [
-										{
-											"$ref": "#/components/schemas/IAuthSuccessResponse"
-										},
-										{
-											"$ref": "#/components/schemas/IAuthBadResponse"
-										}
-									]
-								},
-								"examples": {
-									"Example 1": {
-										"value": {
-											"email": "test@gmail.com",
-											"pws": "12345678",
-											"remember_me": true
-										}
-									}
-								}
-							}
-						}
-					},
-					"422": {
-						"description": "Validation Failed",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/IAuthBadResponse"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Auth"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ISignIn"
 							}
 						}
 					}

@@ -9,5 +9,5 @@ export interface ISignUp {
     last_name: string;
     email: string;
     pws: string;
-    role: 'photograph' | 'model'
+    role: string
 }
