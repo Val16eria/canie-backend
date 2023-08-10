@@ -103,6 +103,26 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ISignIn": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"pws": {
+						"type": "string"
+					},
+					"remember_me": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"email",
+					"pws",
+					"remember_me"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -174,11 +194,76 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
-					"required": true,
+					"required": false,
 					"content": {
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/ISignUp"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/signin": {
+			"post": {
+				"operationId": "SignIn",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/IAuthResponse"
+										},
+										{
+											"$ref": "#/components/schemas/IAuthBadResponse"
+										}
+									]
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"user": {
+												"id": "1",
+												"first_name": "Valeria",
+												"last_name": "Mikhailenko",
+												"email": "test@gmail.com",
+												"role": "photograph"
+											},
+											"status": 200,
+											"access_token": "your access_token",
+											"refresh_token": "your refresh_token"
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IAuthBadResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ISignIn"
 							}
 						}
 					}

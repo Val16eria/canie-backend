@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema({
     authentication: {
         pws: { type: String, require: true, select: false },
         access_token: { type: String, select: false },
-        refresh_token: { type: String, select: false }
+        refresh_token: { type: String, select: false },
+        salt: { type: String, selct: false }
     },
 });
 
