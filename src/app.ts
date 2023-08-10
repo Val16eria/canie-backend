@@ -5,12 +5,15 @@ import express, {
     NextFunction 
 } from 'express';
 import { ValidateError } from 'tsoa';
+import { config } from 'dotenv';
 import mongoose from 'mongoose';
 import swaggerUi from 'swagger-ui-express';
+
 import router from './router';
 
-const PORT = 8080;
-const DB_URL = 'mongodb+srv://valdbuser:P0s27zDAgQM5KvMZ@canie-cluster.ywtbvrj.mongodb.net/?retryWrites=true&w=majority';
+config();
+const PORT = process.env.PORT;
+const DB_URL = process.env.DB_URL;
 
 const app: Application = express();
 app.use(express.json());
