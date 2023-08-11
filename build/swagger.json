@@ -34,44 +34,42 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IAuthResponse": {
+			"IAuthUser": {
 				"properties": {
-					"status": {
-						"type": "number",
-						"format": "double"
-					},
-					"access_token": {
-						"type": "string"
-					},
-					"refresh_token": {
-						"type": "string"
-					},
 					"user": {
 						"$ref": "#/components/schemas/IUser"
+					},
+					"authentication": {
+						"properties": {
+							"refresh_token": {
+								"type": "string"
+							},
+							"access_token": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"refresh_token",
+							"access_token"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
-					"status",
-					"access_token",
-					"refresh_token",
-					"user"
+					"user",
+					"authentication"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IAuthBadResponse": {
+			"IBadResponse": {
 				"properties": {
-					"status": {
-						"type": "number",
-						"format": "double"
-					},
-					"error_message": {
+					"reason": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"status",
-					"error_message"
+					"reason"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -151,10 +149,10 @@
 								"schema": {
 									"anyOf": [
 										{
-											"$ref": "#/components/schemas/IAuthResponse"
+											"$ref": "#/components/schemas/IAuthUser"
 										},
 										{
-											"$ref": "#/components/schemas/IAuthBadResponse"
+											"$ref": "#/components/schemas/IBadResponse"
 										}
 									]
 								},
@@ -168,21 +166,22 @@
 												"email": "test@gmail.com",
 												"role": "photograph"
 											},
-											"status": 200,
-											"access_token": "your access_token",
-											"refresh_token": "your refresh_token"
+											"authentication": {
+												"access_token": "your access_token",
+												"refresh_token": "your refresh_token"
+											}
 										}
 									}
 								}
 							}
 						}
 					},
-					"422": {
+					"400": {
 						"description": "Validation Failed",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IAuthBadResponse"
+									"$ref": "#/components/schemas/IBadResponse"
 								}
 							}
 						}
@@ -216,10 +215,10 @@
 								"schema": {
 									"anyOf": [
 										{
-											"$ref": "#/components/schemas/IAuthResponse"
+											"$ref": "#/components/schemas/IAuthUser"
 										},
 										{
-											"$ref": "#/components/schemas/IAuthBadResponse"
+											"$ref": "#/components/schemas/IBadResponse"
 										}
 									]
 								},
@@ -233,21 +232,22 @@
 												"email": "test@gmail.com",
 												"role": "photograph"
 											},
-											"status": 200,
-											"access_token": "your access_token",
-											"refresh_token": "your refresh_token"
+											"authentication": {
+												"access_token": "your access_token",
+												"refresh_token": "your refresh_token"
+											}
 										}
 									}
 								}
 							}
 						}
 					},
-					"422": {
+					"400": {
 						"description": "Validation Failed",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/IAuthBadResponse"
+									"$ref": "#/components/schemas/IBadResponse"
 								}
 							}
 						}

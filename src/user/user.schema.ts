@@ -5,12 +5,11 @@ const UserSchema = new mongoose.Schema({
     last_name: { type: String, require: true },
     email: { type: String, require: true },
     role: { type: String, require: true },
-    remember_me: { type: Boolean, require: true },
     authentication: {
-        pws: { type: String, require: true, select: false },
-        access_token: { type: String, select: false },
-        refresh_token: { type: String, select: false },
-        salt: { type: String, selct: false }
+        pws: { type: String, require: true },
+        access_token: { type: String },
+        refresh_token: { type: String },
+        salt: { type: String }
     },
 });
 

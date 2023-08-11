@@ -11,3 +11,7 @@ export interface ISignUp {
     pws: string;
     role: string
 }
+
+export interface IBadResponse {
+    reason: string;
+}

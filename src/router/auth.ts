@@ -1,69 +1,113 @@
 import express, { Request, Response } from 'express';
 
+import { IAuthUser } from '../user/user.dto';
 import { createUser, getUserByEmail } from '../user/user.schema';
-import { random, authentication } from '../auth/auth.helpers';
+import { 
+    random, 
+    authentication, 
+    generateToken, 
+    SECRET_ACCESS,
+    SECRET_REFRESH,
+    refreshTokens
+} from '../auth/auth.helpers';
 import { AuthController } from '../auth/auth.controller';
 
 export default (router: express.Router) => {
+    // SIGNUP
     router.post('/auth/signup', async (req: Request, res: Response) => {
         try {
             const { first_name, last_name, email, pws, role } = req.body;
-            if (!first_name || !email || !pws) {
-                return res.sendStatus(400);
+            if (!first_name || !last_name || !email || !pws || !role) {
+                return res.status(400).send({
+                    reason: 'Поле не заполнено'
+                });
             }
 
             const existingUser = await getUserByEmail(email);
             if (existingUser) {
-                return res.sendStatus(400);
+                res.status(400).send({
+                    reason: 'Пользователь с таким email уже существует'
+                });
             }
+            else {
+                const accesToken = generateToken(first_name, role, SECRET_ACCESS);
+                const refreshToken = generateToken(first_name, role, SECRET_REFRESH);
+                refreshTokens.push(refreshToken);
 
-            const salt = random();
-            const user = await createUser({
-                first_name,
-                last_name,
-                email,
-                role,
-                authentication: {
-                    pws: authentication(salt, pws),
-                    access_token: salt,
-                    refresh_token: salt,
-                    salt
+                const salt = random();
+                const user = await createUser({
+                    first_name,
+                    last_name,
+                    email,
+                    role,
+                    authentication: {
+                        pws: authentication(salt, pws),
+                        access_token: accesToken,
+                        refresh_token: refreshToken,
+                        salt
+                    }
+                });
+
+                res.cookie('CANIE-AUTH', user.authentication.refresh_token, {
+                    domain: 'loclhost',
+                    path: '/'
+                })
+
+                const authUser: IAuthUser = {
+                    user: {
+                        id: user._id.toString(),
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        email: user.email,
+                        role: user.role
+                    },
+                    authentication: {
+                        access_token: user.authentication.access_token,
+                        refresh_token: user.authentication.refresh_token
+                    }
                 }
-            });
 
-            const controller = new AuthController();
-            const response = await controller.SignUp({
-                id: user._id.toString(),
-                first_name: user.first_name, 
-                last_name: user.last_name, 
-                email: user.email,
-                role: user.role
-            }, {
-                status: 200,
-                access_token: user.authentication.access_token,
-                refresh_token: user.authentication.refresh_token,
-            });
-            return res.status(200).send(response).end();
-        }
+                const controller = new AuthController();
+                const response = await controller.SignUp(authUser);
+                return res.status(200).send(response);
+            }
+        } 
         catch (err) {
-            console.log('err', err);
-            return res.sendStatus(400);
+            console.log(err)
+            return res.status(400).send({
+                reason: 'Ошибка регистрации'
+            })
         }
     });
 
+    // SIGNIN
     router.post('/auth/signin', async (req: Request, res: Response) => {
         try {
-            const { email, pws } = req.body;
+            const { email, pws, remember_me } = req.body;
 
-            if (!email || !pws) {
-                return res.sendStatus(400);
+            if (!email || !pws || !remember_me) {
+                return res.status(400).send({
+                    reason: 'Поле не заполнено'
+                });
             }
 
-            const user = await getUserByEmail(email).select('+authentication.salt +authentication.pws');
-
+            const user = await getUserByEmail(email);
+            console.log('user ->', user);
             if (!user) {
-                return res.sendStatus(400);
+                return res.status(400).send({
+                    reason: 'Пользователя с таким email не существует'
+                });
             }
+
+            const accesToken = generateToken(user.first_name, user.role, SECRET_ACCESS);
+            let refreshToken;
+            if (remember_me) {
+                refreshToken = generateToken(user.first_name, user.role, SECRET_REFRESH, { expiresIn: '1h' });
+            }
+            else {
+                refreshToken = generateToken(user.first_name, user.role, SECRET_REFRESH);
+            }
+            refreshTokens.push(refreshToken);
 
             const expectedHash = authentication(user.authentication.salt, pws);
 
@@ -71,31 +115,43 @@ export default (router: express.Router) => {
                 return res.sendStatus(403);
             }
 
-            const salt = random();
-            user.authentication.access_token = authentication(salt, user._id.toString());
-            user.authentication.refresh_token = authentication(salt, user._id.toString());
+            user.authentication.access_token = accesToken;
+            user.authentication.refresh_token = refreshToken;
             await user.save();
 
-            res.cookie('CANIE-AUTH', user.authentication.refresh_token, 
-            { domain: 'localhost', path: '/' });
+            res.cookie('CANIE-AUTH', user.authentication.refresh_token, {
+                domain: 'loclhost',
+                path: '/'
+            })
+
+            const authUser: IAuthUser = {
+                user: {
+                    id: user._id.toString(),
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    email: user.email,
+                    role: user.role
+                },
+                authentication: {
+                    access_token: user.authentication.access_token,
+                    refresh_token: user.authentication.refresh_token
+                }
+            }
 
             const controller = new AuthController();
-            const response = await controller.SignIn({
-                id: user._id.toString(),
-                first_name: user.first_name, 
-                last_name: user.last_name, 
-                email: user.email,
-                role: user.role
-            }, {
-                status: 200,
-                access_token: user.authentication.access_token,
-                refresh_token: user.authentication.refresh_token,
-            });
+            const response = await controller.SignIn(authUser);
             return res.status(200).send(response).end();
         }
         catch (err) {
-            console.log('err', err);
-            return res.sendStatus(400);
+            return res.status(400).send({
+                reason: 'Ошибка авторизации'
+            }).end();
         }
+    });
+
+    router.post('auth/logout', (req: Request, res: Response) => {
+        const { token } = req.body;
+        refreshTokens.filter((t) => t !== token);
+        res.send('Logout successful');
     });
 };

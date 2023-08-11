@@ -5,3 +5,11 @@ export interface IUser {
     email: string;
     role: string;
 }
+
+export interface IAuthUser {
+    user: IUser;
+    authentication: {
+        access_token: string;
+        refresh_token: string;
+    }
+}

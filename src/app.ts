@@ -4,6 +4,12 @@ import express, {
     Response, 
     NextFunction 
 } from 'express';
+import http from 'http';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import cors from 'cors';
+
 import { ValidateError } from 'tsoa';
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
@@ -16,7 +22,17 @@ const PORT = process.env.PORT;
 const DB_URL = process.env.DB_URL;
 
 const app: Application = express();
-app.use(express.json());
+
+app.use(cors({
+    credentials: true
+}));
+app.use(compression());
+app.use(cookieParser());
+app.use(bodyParser.json());
+
+const server = http.createServer(app);
+
+// app.use(express.json());
 app.use('/', router());
 
 app.use('/docs', swaggerUi.serve, async (_req: Request, res: Response) => {
@@ -56,10 +72,10 @@ app.use(function errorHandler(
 async function startApp() {
     try {
         await mongoose.connect(DB_URL);
-        app.listen(PORT, () => console.log('server started on port ' + PORT));
+        server.listen(PORT, () => console.log('server started on port ' + PORT));
     }
-    catch (e) {
-        console.log(e);
+    catch (err) {
+        console.log(err);
     }
 }
 
