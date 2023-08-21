@@ -85,7 +85,7 @@ export default (router: express.Router) => {
         try {
             const { email, pws, remember_me } = req.body;
 
-            if (!email || !pws || !remember_me) {
+            if (!email || !pws ) {
                 return res.status(400).send({
                     reason: 'Поле не заполнено'
                 });
@@ -112,7 +112,9 @@ export default (router: express.Router) => {
             const expectedHash = authentication(user.authentication.salt, pws);
 
             if (user.authentication.pws != expectedHash) {
-                return res.sendStatus(403);
+                return res.status(403).send({
+                    reason: 'Неправильный ввод данных'
+                });
             }
 
             user.authentication.access_token = accesToken;
@@ -149,9 +151,16 @@ export default (router: express.Router) => {
         }
     });
 
-    router.post('auth/logout', (req: Request, res: Response) => {
-        const { token } = req.body;
-        refreshTokens.filter((t) => t !== token);
-        res.send('Logout successful');
+    router.post('/auth/logout', (req: Request, res: Response) => {
+        try {
+            const { token } = req.body;
+            refreshTokens.filter((t) => t !== token);
+            res.send('Logout successful');
+        }
+        catch (err) {
+            return res.status(400).send({
+                reason: 'Ошибка выхода'
+            }).end();
+        }
     });
 };
