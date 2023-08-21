@@ -23,9 +23,14 @@ const DB_URL = process.env.DB_URL;
 
 const app: Application = express();
 
-app.use(cors({
-    credentials: true
-}));
+app.use(
+    cors({
+        origin: true,
+        optionsSuccessStatus: 200,
+        credentials: true,
+    })
+);
+
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
