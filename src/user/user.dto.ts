@@ -1,3 +1,5 @@
+import { TTokens } from '../token/token.dto';
+
 export interface IUser {
     id: string,
     first_name: string;
@@ -8,8 +10,5 @@ export interface IUser {
 
 export interface IAuthUser {
     user: IUser;
-    authentication: {
-        access_token: string;
-        refresh_token: string;
-    }
+    authentication: TTokens;
 }

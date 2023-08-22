@@ -151,11 +151,15 @@ export default (router: express.Router) => {
         }
     });
 
-    router.post('/auth/logout', (req: Request, res: Response) => {
+    router.post('/auth/logout', async (req: Request, res: Response) => {
         try {
             const { token } = req.body;
+
             refreshTokens.filter((t) => t !== token);
-            res.send('Logout successful');
+            
+            const controller = new AuthController();
+            const response = await controller.Logout();
+            return res.status(200).send(response).end();
         }
         catch (err) {
             return res.status(400).send({

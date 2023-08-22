@@ -34,25 +34,47 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"IAccessToken": {
+				"properties": {
+					"access_token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"access_token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IRefrshToken": {
+				"properties": {
+					"refresh_token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"refresh_token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TTokens": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/IAccessToken"
+					},
+					{
+						"$ref": "#/components/schemas/IRefrshToken"
+					}
+				]
+			},
 			"IAuthUser": {
 				"properties": {
 					"user": {
 						"$ref": "#/components/schemas/IUser"
 					},
 					"authentication": {
-						"properties": {
-							"refresh_token": {
-								"type": "string"
-							},
-							"access_token": {
-								"type": "string"
-							}
-						},
-						"required": [
-							"refresh_token",
-							"access_token"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/TTokens"
 					}
 				},
 				"required": [
@@ -264,6 +286,104 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/ISignIn"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"type": "string"
+										},
+										{
+											"$ref": "#/components/schemas/IBadResponse"
+										}
+									]
+								},
+								"examples": {
+									"Example 1": {
+										"value": "Logout successful"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Logout Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBadResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/token": {
+			"post": {
+				"operationId": "Token",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{},
+										{
+											"$ref": "#/components/schemas/IBadResponse"
+										}
+									]
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"access_token": "access_token"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Token Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBadResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Token"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/IRefrshToken"
 							}
 						}
 					}

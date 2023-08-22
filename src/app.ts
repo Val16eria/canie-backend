@@ -37,7 +37,6 @@ app.use(bodyParser.json());
 
 const server = http.createServer(app);
 
-// app.use(express.json());
 app.use('/', router());
 
 app.use('/docs', swaggerUi.serve, async (_req: Request, res: Response) => {
@@ -48,7 +47,7 @@ app.use('/docs', swaggerUi.serve, async (_req: Request, res: Response) => {
 
 app.use(function notFoundHandler(_req, res: Response) {
     res.status(404).send({
-        message: "Not Found",
+        message: 'Not Found',
     });
 });
 
@@ -61,13 +60,13 @@ app.use(function errorHandler(
     if (err instanceof ValidateError) {
         console.warn(`Caught Validation Error for ${req.path}:`, err.fields);
         return res.status(422).json({
-            message: "Validation Failed",
+            message: 'Validation Failed',
             details: err?.fields,
         });
     }
     if (err instanceof Error) {
         return res.status(500).json({
-            message: "Internal Server Error",
+            message: 'Internal Server Error',
         });
     }
 
