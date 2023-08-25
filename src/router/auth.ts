@@ -1,4 +1,3 @@
-import { addRole, getRoleById } from '../role/role.schema';
 import express, { Request, Response } from 'express';
 
 import { IAuthUser } from '../user/user.dto';
@@ -32,9 +31,8 @@ export default (router: express.Router) => {
                 });
             }
             else {
-                const roleData = await addRole({ name: role });
-                const accesToken = generateToken(first_name, roleData.name, SECRET_ACCESS);
-                const refreshToken = generateToken(first_name, roleData.name, SECRET_REFRESH);
+                const accesToken = generateToken(first_name, role, SECRET_ACCESS);
+                const refreshToken = generateToken(first_name, role, SECRET_REFRESH);
                 refreshTokens.push(refreshToken);
 
                 const salt = random();
@@ -42,7 +40,7 @@ export default (router: express.Router) => {
                     first_name,
                     last_name,
                     email,
-                    role_id: roleData._id,
+                    role,
                     authentication: {
                         pws: authentication(salt, pws),
                         access_token: accesToken,
@@ -62,7 +60,7 @@ export default (router: express.Router) => {
                         first_name: user.first_name,
                         last_name: user.last_name,
                         email: user.email,
-                        role: roleData.name
+                        role: role
                     },
                     authentication: {
                         access_token: user.authentication.access_token,
@@ -95,21 +93,19 @@ export default (router: express.Router) => {
             }
 
             const user = await getUserByEmail(email);
-            const roleData = (await getRoleById(user.role_id));
-            console.log('user ->', user);
             if (!user) {
                 return res.status(400).send({
                     reason: 'Пользователя с таким email не существует'
                 });
             }
 
-            const accesToken = generateToken(user.first_name, roleData.name, SECRET_ACCESS);
+            const accesToken = generateToken(user.first_name, user.role, SECRET_ACCESS);
             let refreshToken;
             if (remember_me) {
-                refreshToken = generateToken(user.first_name, roleData.name, SECRET_REFRESH, { expiresIn: '1h' });
+                refreshToken = generateToken(user.first_name, user.role, SECRET_REFRESH, { expiresIn: '1h' });
             }
             else {
-                refreshToken = generateToken(user.first_name, roleData.name, SECRET_REFRESH);
+                refreshToken = generateToken(user.first_name, user.role, SECRET_REFRESH);
             }
             refreshTokens.push(refreshToken);
 
@@ -136,7 +132,7 @@ export default (router: express.Router) => {
                     first_name: user.first_name,
                     last_name: user.last_name,
                     email: user.email,
-                    role: roleData.name
+                    role: user.role
                 },
                 authentication: {
                     access_token: user.authentication.access_token,

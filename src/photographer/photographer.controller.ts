@@ -1,4 +1,3 @@
-import { IBadResponse } from '../error/error.dto';
 import { 
     Controller, 
     Queries, 
@@ -9,6 +8,7 @@ import {
     Request, 
     Get
 } from 'tsoa';
+import { IBadResponse } from '../error/error.dto';
 import { IPhotographer, IPhotographerParams } from './photographer.dto';
 
 @Route('photographers')

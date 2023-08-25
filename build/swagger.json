@@ -144,6 +144,63 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"IModel": {
+				"properties": {
+					"model_avatar": {
+						"type": "string"
+					},
+					"full_name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"average_raiting": {
+						"type": "number",
+						"format": "double"
+					},
+					"count_of_reviews": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"model_avatar",
+					"full_name",
+					"description",
+					"average_raiting",
+					"count_of_reviews"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IModelParams": {
+				"properties": {
+					"price_per_hour": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array"
+					},
+					"types_of_model": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"offset": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IPhotographer": {
 				"properties": {
 					"photograph_avatar": {
@@ -391,6 +448,103 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/models": {
+			"get": {
+				"operationId": "ModelList",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"items": {
+												"$ref": "#/components/schemas/IModel"
+											},
+											"type": "array"
+										},
+										{
+											"$ref": "#/components/schemas/IBadResponse"
+										}
+									]
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"model_avatar": "https://i.pinimg.com/736x/ff/75/e7/ff75e70833921cbb8ff7e2c4d36167bd.jpg",
+												"full_name": "Valeria Mikhailenko",
+												"description": "For more than 3 years I have specialized in modeling urban and natural objects, as well as portraits",
+												"average_raiting": 5,
+												"count_of_reviews": 345
+											}
+										]
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Model Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IBadResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Models"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "price_per_hour",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "number",
+								"format": "double"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "types_of_model",
+						"required": false,
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/photographers": {
