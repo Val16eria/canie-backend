@@ -174,36 +174,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IModelParams": {
-				"properties": {
-					"price_per_hour": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
-					},
-					"types_of_model": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"limit": {
-						"type": "number",
-						"format": "double"
-					},
-					"offset": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"price_per_hour"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"IPhotographer": {
 				"properties": {
 					"photograph_avatar": {
@@ -230,36 +200,6 @@
 					"description",
 					"average_raiting",
 					"count_of_reviews"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IPhotographerParams": {
-				"properties": {
-					"price_per_hour": {
-						"items": {
-							"type": "number",
-							"format": "double"
-						},
-						"type": "array"
-					},
-					"types_of_photography": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"limit": {
-						"type": "number",
-						"format": "double"
-					},
-					"offset": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"price_per_hour"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -512,8 +452,12 @@
 					{
 						"in": "query",
 						"name": "price_per_hour",
-						"required": true,
+						"required": false,
 						"schema": {
+							"default": [
+								100,
+								35000
+							],
 							"type": "array",
 							"items": {
 								"type": "number",
@@ -523,7 +467,7 @@
 					},
 					{
 						"in": "query",
-						"name": "types_of_model",
+						"name": "types_of_photos",
 						"required": false,
 						"schema": {
 							"type": "array",
@@ -609,8 +553,12 @@
 					{
 						"in": "query",
 						"name": "price_per_hour",
-						"required": true,
+						"required": false,
 						"schema": {
+							"default": [
+								100,
+								35000
+							],
 							"type": "array",
 							"items": {
 								"type": "number",
@@ -620,7 +568,7 @@
 					},
 					{
 						"in": "query",
-						"name": "types_of_photography",
+						"name": "types_of_photos",
 						"required": false,
 						"schema": {
 							"type": "array",

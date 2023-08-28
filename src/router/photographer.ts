@@ -38,12 +38,13 @@ export default (router: express.Router) => {
             });
             
             const controller = new PhotographerController();
-            const response = await controller.PhotographersList(photographersResponse, {
-                price_per_hour,
-                types_of_photos,
-                limit,
-                offset
-            });
+            const response = await controller.PhotographersList(photographersResponse);
+            // {
+            //     price_per_hour,
+            //     types_of_photos,
+            //     limit,
+            //     offset
+            // }
             return res.status(200).json(response).end();
         }
         catch (err) {

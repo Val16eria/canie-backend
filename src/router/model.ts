@@ -39,12 +39,7 @@ export default (router: express.Router) => {
             });
             
             const controller = new ModelController();
-            const response = await controller.ModelList(modelsResponse, {
-                price_per_hour,
-                types_of_photos,
-                limit,
-                offset
-            });
+            const response = await controller.ModelList(modelsResponse);
             return res.status(200).json(response).end();
 
         }

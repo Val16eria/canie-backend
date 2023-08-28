@@ -1,6 +1,6 @@
 import { 
     Controller, 
-    Queries, 
+    Query,
     Example, 
     Route, 
     Tags, 
@@ -9,7 +9,6 @@ import {
     Get
 } from 'tsoa';
 import { IBadResponse } from '../error/error.dto';
-import { IPhotoParams } from '../user/user.dto';
 import { IPhotographer } from './photographer.dto';
 
 @Route('photographers')
@@ -28,7 +27,11 @@ export class PhotographerController extends Controller {
     @Get('')
     public async PhotographersList(
         @Request() requestBody: IPhotographer[],
-        @Queries() _params: IPhotoParams,
+        @Query() price_per_hour: number[] = [100, 35000],
+        @Query() types_of_photos?: string[],
+        @Query() limit?: number,
+        @Query() offset?: number
+
     ): Promise<IPhotographer[] | IBadResponse> {
         try {
             return requestBody;
