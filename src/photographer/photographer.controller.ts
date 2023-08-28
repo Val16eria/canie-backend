@@ -9,7 +9,8 @@ import {
     Get
 } from 'tsoa';
 import { IBadResponse } from '../error/error.dto';
-import { IPhotographer, IPhotographerParams } from './photographer.dto';
+import { IPhotoParams } from '../user/user.dto';
+import { IPhotographer } from './photographer.dto';
 
 @Route('photographers')
 @Tags('Photographers')
@@ -26,12 +27,11 @@ export class PhotographerController extends Controller {
     }])
     @Get('')
     public async PhotographersList(
-        @Request() requestBody: IPhotographer,
-        @Queries() params?: IPhotographerParams,
-        // @Queries() params?: IPhotographerParams
+        @Request() requestBody: IPhotographer[],
+        @Queries() _params: IPhotoParams,
     ): Promise<IPhotographer[] | IBadResponse> {
         try {
-            return [requestBody]
+            return requestBody;
         }
         catch (err) {
             return {

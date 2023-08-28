@@ -6,13 +6,6 @@ export interface IModel {
     count_of_reviews: number;
 }
 
-export interface IModelParams {
-    price_per_hour?: number[];
-    types_of_model?: string[];
-    limit?: number;
-    offset?: number;
-}
-
 export interface IPricePerHour {
     min: number;
     max: number;

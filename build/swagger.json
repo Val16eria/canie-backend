@@ -198,6 +198,9 @@
 						"format": "double"
 					}
 				},
+				"required": [
+					"price_per_hour"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -255,6 +258,9 @@
 						"format": "double"
 					}
 				},
+				"required": [
+					"price_per_hour"
+				],
 				"type": "object",
 				"additionalProperties": false
 			}
@@ -506,7 +512,7 @@
 					{
 						"in": "query",
 						"name": "price_per_hour",
-						"required": false,
+						"required": true,
 						"schema": {
 							"type": "array",
 							"items": {
@@ -603,7 +609,7 @@
 					{
 						"in": "query",
 						"name": "price_per_hour",
-						"required": false,
+						"required": true,
 						"schema": {
 							"type": "array",
 							"items": {

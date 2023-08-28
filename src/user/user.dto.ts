@@ -12,3 +12,10 @@ export interface IAuthUser {
     user: IUser;
     authentication: TTokens;
 }
+
+export interface IPhotoParams {
+    price_per_hour: number[];
+    types_of_photos?: string[];
+    limit?: number;
+    offset?: number;
+}

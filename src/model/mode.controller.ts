@@ -1,6 +1,16 @@
-import { Controller, Route, Response, Request, Tags, Example, Get, Queries } from 'tsoa';
+import { 
+    Controller, 
+    Route, 
+    Response, 
+    Request, 
+    Tags, 
+    Example, 
+    Get, 
+    Queries 
+} from 'tsoa';
 import { IBadResponse } from '../error/error.dto';
-import { IModel, IModelParams } from './model.dto';
+import { IPhotoParams } from '../user/user.dto';
+import { IModel } from './model.dto';
 
 @Route('models')
 @Tags('Models')
@@ -17,11 +27,11 @@ export class ModelController extends Controller {
     }])
     @Get('')
     public async ModelList(
-        @Request() requestBody: IModel,
-        @Queries() params?: IModelParams,
+        @Request() requestBody: IModel[],
+        @Queries() _params: IPhotoParams,
     ): Promise<IModel[] | IBadResponse> {
         try {
-            return [requestBody]
+            return requestBody;
         }
         catch (err) {
             return {

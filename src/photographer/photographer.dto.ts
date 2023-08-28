@@ -6,13 +6,6 @@ export interface IPhotographer {
     count_of_reviews: number;
 }
 
-export interface IPhotographerParams {
-    price_per_hour?: number[];
-    types_of_photography?: string[];
-    limit?: number;
-    offset?: number;
-}
-
 export interface IPricePerHour {
     min: number;
     max: number;
