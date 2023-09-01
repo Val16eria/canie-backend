@@ -9,7 +9,7 @@ export default (router: express.Router) => {
     router.get('/models', async (req: Request, res: Response) => {
         try {
             const types_of_photos = (
-                req.query.types_of_model === undefined ? 
+                req.query.types_of_photos === undefined ? 
                 undefined : 
                 (String(req.query.types_of_photos)).split(',')
             );
