@@ -26,7 +26,7 @@ export default (router: express.Router) => {
 
             const controller = new UserController();
             const response = await controller.getUserById(id, descriptionUser);
-            return res.status(200).send(response).end();
+            return res.status(200).send(descriptionUser).end();
         }
         catch (err) {
             return res.status(400).send({
