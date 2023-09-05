@@ -18,6 +18,7 @@ export class ModelController extends Controller {
     @Response<IBadResponse>(400, 'Model Failed')
     @Response<string>(200, 'OK')
     @Example<IModel[]>([{
+        id: '1',
         model_avatar: 'https://i.pinimg.com/736x/ff/75/e7/ff75e70833921cbb8ff7e2c4d36167bd.jpg',
         full_name: 'Valeria Mikhailenko',
         description: 'For more than 3 years I have specialized in modeling urban and natural objects, as well as portraits',

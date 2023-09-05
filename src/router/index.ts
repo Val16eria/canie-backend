@@ -4,6 +4,7 @@ import auth from './auth';
 import token from './token';
 import photographer from './photographer';
 import model from './model';
+import users from './users';
 
 const router = express.Router();
 
@@ -12,5 +13,6 @@ export default (): express.Router => {
     token(router);
     photographer(router);
     model(router);
+    users(router);
     return router;
 };

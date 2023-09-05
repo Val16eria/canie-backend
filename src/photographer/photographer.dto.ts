@@ -1,4 +1,5 @@
 export interface IPhotographer {
+    id: string;
     photograph_avatar: string;
     full_name: string;
     description: string;

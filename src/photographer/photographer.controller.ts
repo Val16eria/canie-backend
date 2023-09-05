@@ -18,6 +18,7 @@ export class PhotographerController extends Controller {
     @Response<IBadResponse>(400, 'Photographer Failed')
     @Response<string>(200,'OK')
     @Example<IPhotographer[]>([{
+        id: '1',
         photograph_avatar: 'https://i.pinimg.com/736x/ff/75/e7/ff75e70833921cbb8ff7e2c4d36167bd.jpg',
         full_name: 'Valeria Mikhailenko',
         description: 'For more than 3 years I have been specializing in shooting urban and natural objects, as well as portraits',

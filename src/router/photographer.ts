@@ -29,6 +29,7 @@ export default (router: express.Router) => {
 
             const photographersResponse: IPhotographer[] = photographers.map((item) => {
                 return {
+                    id: item._id.toString(),
                     photograph_avatar: item.avatar,
                     full_name: `${item.first_name} ${item.last_name}`,
                     description: item.description,
@@ -39,7 +40,7 @@ export default (router: express.Router) => {
             
             const controller = new PhotographerController();
             const response = await controller.PhotographersList(photographersResponse);
-            return res.status(200).json(response).end();
+            return res.status(200).send(response).end();
         }
         catch (err) {
             return res.status(400).send({

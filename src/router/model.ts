@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 
 import { getUsersByFilter } from '../user/user.schema';
-import { ModelController } from '../model/mode.controller';
+import { ModelController } from '../model/model.controller';
 import { IModel } from '../model/model.dto';
 
 export default (router: express.Router) => {
@@ -30,6 +30,7 @@ export default (router: express.Router) => {
 
             const modelsResponse: IModel[] = models.map((item) => {
                 return {
+                    id: item._id.toString(),
                     model_avatar: item.avatar,
                     full_name: `${item.first_name} ${item.last_name}`,
                     description: item.description,
@@ -40,7 +41,7 @@ export default (router: express.Router) => {
             
             const controller = new ModelController();
             const response = await controller.ModelList(modelsResponse);
-            return res.status(200).json(response).end();
+            return res.status(200).send(response).end();
 
         }
         catch (err) {

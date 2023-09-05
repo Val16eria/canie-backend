@@ -70,11 +70,10 @@ export default (router: express.Router) => {
 
                 const controller = new AuthController();
                 const response = await controller.SignUp(authUser);
-                return res.status(200).send(response);
+                return res.status(200).send(response).end();
             }
         } 
         catch (err) {
-            console.log(err)
             return res.status(400).send({
                 reason: 'Ошибка регистрации'
             })

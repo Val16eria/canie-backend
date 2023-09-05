@@ -1,4 +1,5 @@
 export interface IModel {
+    id: string;
     model_avatar: string;
     full_name: string;
     description: string;
