@@ -9,7 +9,8 @@ import {
     Request,
 } from 'tsoa';
 
-import { IBadResponse, ISignIn, ISignUp } from './auth.dto';
+import { ISignIn, ISignUp } from './auth.dto';
+import { IBadResponse } from '../error/error.dto';
 import { IAuthUser } from '../user/user.dto';
 
 @Route('auth')
@@ -17,7 +18,7 @@ import { IAuthUser } from '../user/user.dto';
 export class AuthController extends Controller {
     // SignUp
     @Response<IBadResponse>(400, 'Validation Failed')
-    @Response(200, 'OK')
+    @Response<string>(200, 'OK')
     @Example<IAuthUser>({
         user: {
             id: '1',
@@ -41,14 +42,14 @@ export class AuthController extends Controller {
         }
         catch (err) {
             return {
-                reason: err.message
+                reason: err.message,
             }
         }
     }
 
     // SignIn
     @Response<IBadResponse>(400, 'Validation Failed')
-    @Response(200, 'OK')
+    @Response<string>(200, 'OK')
     @Example<IAuthUser>({
         user: {
             id: '1',
@@ -72,7 +73,23 @@ export class AuthController extends Controller {
         }
         catch (err) {
             return {
-                reason: err.message
+                reason: err.message,
+            }
+        }
+    }
+
+    //Logout
+    @Response<IBadResponse>(400, 'Logout Failed')
+    @Response<string>(200, 'OK')
+    @Example<string>('Logout successful')
+    @Post('logout')
+    public async Logout(): Promise<string | IBadResponse> {
+        try {
+            return 'Logout successful'
+        }
+        catch (err) {
+            return {
+                reason: err.message,
             }
         }
     }

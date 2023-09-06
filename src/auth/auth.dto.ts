@@ -9,9 +9,5 @@ export interface ISignUp {
     last_name: string;
     email: string;
     pws: string;
-    role: string
-}
-
-export interface IBadResponse {
-    reason: string;
+    role: string;
 }

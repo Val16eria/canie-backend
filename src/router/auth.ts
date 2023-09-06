@@ -17,6 +17,7 @@ export default (router: express.Router) => {
     router.post('/auth/signup', async (req: Request, res: Response) => {
         try {
             const { first_name, last_name, email, pws, role } = req.body;
+
             if (!first_name || !last_name || !email || !pws || !role) {
                 return res.status(400).send({
                     reason: 'Поле не заполнено'
@@ -59,7 +60,7 @@ export default (router: express.Router) => {
                         first_name: user.first_name,
                         last_name: user.last_name,
                         email: user.email,
-                        role: user.role
+                        role: role
                     },
                     authentication: {
                         access_token: user.authentication.access_token,
@@ -69,11 +70,10 @@ export default (router: express.Router) => {
 
                 const controller = new AuthController();
                 const response = await controller.SignUp(authUser);
-                return res.status(200).send(response);
+                return res.status(200).send(response).end();
             }
         } 
         catch (err) {
-            console.log(err)
             return res.status(400).send({
                 reason: 'Ошибка регистрации'
             })
@@ -92,7 +92,6 @@ export default (router: express.Router) => {
             }
 
             const user = await getUserByEmail(email);
-            console.log('user ->', user);
             if (!user) {
                 return res.status(400).send({
                     reason: 'Пользователя с таким email не существует'
@@ -151,11 +150,15 @@ export default (router: express.Router) => {
         }
     });
 
-    router.post('/auth/logout', (req: Request, res: Response) => {
+    router.post('/auth/logout', async (req: Request, res: Response) => {
         try {
             const { token } = req.body;
+
             refreshTokens.filter((t) => t !== token);
-            res.send('Logout successful');
+            
+            const controller = new AuthController();
+            const response = await controller.Logout();
+            return res.status(200).send(response).end();
         }
         catch (err) {
             return res.status(400).send({
